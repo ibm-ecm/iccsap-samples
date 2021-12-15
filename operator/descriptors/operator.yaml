@@ -112,7 +112,7 @@ spec:
             - name: ANSIBLE_GATHERING
               value: explicit
             # MUST exist, used to accept dba license, valid value only can be "accept"
-            - name: dba_license
+            - name: iccsap_license
               value: "accept"
       imagePullSecrets:
       - name: "admin.registrykey"
