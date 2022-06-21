@@ -108,9 +108,9 @@ spec:
               value: "10"
             - name: ANSIBLE_GATHERING
               value: smart
-            # MUST exist, used to accept dba license, valid value only can be "accept"
-            - name: ier_license
-              value: "accept"
+            # MUST exist, used to accept iccsap license, valid value only can be "accept" license can be found at https://github.com/ibm-ecm/iccsap-samples/blob/main/ICCSAP_LICENSE
+            - name: iccsap_license
+              value: ""
       imagePullSecrets:
       - name: "admin.registrykey"
       volumes:
