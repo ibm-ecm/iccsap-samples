@@ -17,12 +17,12 @@ metadata:
     app.kubernetes.io/instance: ibm-dba
     app.kubernetes.io/managed-by: ibm-dba
     app.kubernetes.io/name: ibm-dba
-    release: 4.0.0.4.9
+    release: 4.0.0.4.11
 spec:
   ##########################################################################
   ## This section contains the shared configuration for all CP4A components #
   ##########################################################################
-  appVersion: 4.0.0.4.9
+  appVersion: 4.0.0.4.11
   shared_configuration:
 
     ## This is the deployment context is iccsap. No update it required.
