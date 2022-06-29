@@ -16,7 +16,7 @@ metadata:
     app.kubernetes.io/instance: ibm-dba
     app.kubernetes.io/managed-by: ibm-dba
     app.kubernetes.io/name: ibm-dba
-    release: 4.0.0.4.9
+    release: 4.0.0.4.11
 spec:
   ## TIPS: The names of all variables in the spec field are converted to snake_case by the operator before running ansible
   ## For example, serviceAccount in the spec becomes service_account in ansible.
@@ -66,7 +66,7 @@ spec:
     image:
       ## The default repository is the IBM Entitled Registry
       repository: cp.icr.io/cp/cp4a/iccsap/iccsap
-      tag: ga-4004-iccsap-if009
+      tag: ga-4004-iccsap-if011
 
       ## This will override the image pull policy in the shared_configuration.
       pull_policy: IfNotPresent
@@ -109,7 +109,10 @@ spec:
     ## the Operator will create the PVC using the names below.
     datavolume:
       existing_pvc_for_iccsap_instance: "iccsap-instance"
-      existing_pvc_for_iccsap_logs: "iccsap-logstore"
+      existing_pvc_for_iccsap_logs: "iccsap-logstore"      
+    storage:
+      storage_class: "<Required>"
+      size_for_logstore: 1Gi  
 
     ## Default values for both rediness and liveness probes.  Modify these values to meet your requirements.
     probe:
