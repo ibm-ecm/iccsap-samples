@@ -210,7 +210,7 @@ if [[ $LICENSE_ACCEPTED != "accept" ]]; then
 fi
 
 if [[ $RUNTIME_MODE == "dev" ]]; then
-    OLM_CATALOG=${PARENT_DIR}/descriptors/op-olm/cp4a_catalogsource_dev.yaml
+    OLM_CATALOG=${PARENT_DIR}/descriptors/op-olm/catalog_source.yaml
     online_source="ibm-cp4a-operator-catalog"
 elif [ $RUNTIME_MODE == "baw-dev" ]]; then
     online_source="ibm-bawoperator-catalog"
