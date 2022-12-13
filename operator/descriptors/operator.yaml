@@ -16,7 +16,7 @@ metadata:
     app.kubernetes.io/instance: ibm-dba
     app.kubernetes.io/managed-by: ibm-dba
     app.kubernetes.io/name: ibm-dba
-    release: 22.0.1
+    release: 22.0.2
 spec:
   replicas: 1
   selector:
@@ -29,16 +29,16 @@ spec:
         app.kubernetes.io/instance: ibm-dba
         app.kubernetes.io/managed-by: ibm-dba
         app.kubernetes.io/name: ibm-dba
-        release: 22.0.1
+        release: 22.0.2
       annotations:
         productID: "5737-I23"
         productName: "IBM Cloud Pak for Business Automation"
-        productVersion: "21.0.3"
+        productVersion: "22.0.2"
         productChargedContainers: ""
         productMetric: "VIRTUAL_PROCESSOR_CORE"
         cloudpakId: "94a9c8c358bb43ba8fbdea62e7e166a5"
         cloudpakName: "IBM Cloud Pak for Business Automation"
-        cloudpakVersion: "21.0.3"
+        cloudpakVersion: "22.0.2"
     spec:
       hostNetwork: false
       hostPID: false
@@ -50,30 +50,58 @@ spec:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
-            - matchExpressions:
-              - key: kubernetes.io/arch
-                operator: In
-                values:
-                - amd64
-                - s390x
+              - matchExpressions:
+                  - key: kubernetes.io/arch
+                    operator: In
+                    values:
+                      - amd64
+                      - s390x
+                      - ppc64le
           preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 3
-            preference:
-              matchExpressions:
-              - key: kubernetes.io/arch
-                operator: In
-                values:
-                - amd64
-                - s390x
+            - weight: 3
+              preference:
+                matchExpressions:
+                  - key: kubernetes.io/arch
+                    operator: In
+                    values:
+                      - amd64
+                      - s390x
+                      - ppc64le
+      initContainers:
+        - name: folder-prepare-container
+          image: icr.io/cpopen/icp4a-operator@sha256:c8e45bb842289ece63c8e1dd3ac5a14419cc1ffc6c2dce181c2247110d123793
+          securityContext:
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - name: license-folder-pvc
+              mountPath: /license-folder
+            - name: ansible-folder-pvc
+              mountPath: /ansible-folder
+            - name: tmp-folder-pvc
+              mountPath: /tmp-folder        
+            - name: log-folder-pvc
+              mountPath: /log-folder
+            - name: ibm-folder-pvc
+              mountPath: /ibm-folder
+          command:
+            - "/bin/sh"
+            - "-ecx"
+            - >
+              rm -rf /license-folder/* && rm -rf /tmp-folder/* && rm -rf /ansible-folder/* && rm -rf /log-folder/* && rm -rf /ibm-folder/* &&
+              cp -rp /licenses/* /license-folder && 
+              mkdir -p /ansible-folder/.ansible &&
+              cp -rp /opt/ansible/* /ansible-folder &&
+              cp -rp /opt/ansible/.ansible/* /ansible-folder/.ansible &&
+              cp -rp /opt/ibm/* /ibm-folder 
       containers:
         - name: operator
           # Replace this with the built image name
-          image: icr.io/cpopen/icp4a-operator@sha256:e07387ccd15904b75882e105913b2e6b2e1210ea2b2ce59ec068d67bfb6e4813
+          image: icr.io/cpopen/icp4a-operator@sha256:c8e45bb842289ece63c8e1dd3ac5a14419cc1ffc6c2dce181c2247110d123793
           imagePullPolicy: Always
           securityContext:
             allowPrivilegeEscalation: false
             privileged: false
-            readOnlyRootFilesystem: false
+            readOnlyRootFilesystem: true
             # Uncomment below for OCP 3.11
             # runAsUser: 1001
             capabilities:
@@ -106,5 +134,27 @@ spec:
             # MUST exist, used to accept dba license, valid value only can be "accept"
             - name: dba_license
               value: "accept"
+          volumeMounts:
+            - name: license-folder-pvc
+              mountPath: /licenses
+            - name: ansible-folder-pvc
+              mountPath: /opt/ansible
+            - name: tmp-folder-pvc
+              mountPath: /tmp        
+            - name: log-folder-pvc
+              mountPath: /logs
+            - name: ibm-folder-pvc
+              mountPath: /opt/ibm
       imagePullSecrets:
       - name: "ibm-entitlement-key"
+      volumes:
+        - name: license-folder-pvc
+          emptyDir: {}
+        - name: tmp-folder-pvc
+          emptyDir: {}
+        - name: ansible-folder-pvc
+          emptyDir: {}
+        - name: log-folder-pvc
+          emptyDir: {}
+        - name: ibm-folder-pvc
+          emptyDir: {}

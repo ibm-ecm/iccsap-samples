@@ -16,7 +16,7 @@ metadata:
     app.kubernetes.io/instance: ibm-dba
     app.kubernetes.io/managed-by: ibm-dba
     app.kubernetes.io/name: ibm-dba
-    release: 22.0.1
+    release: 22.0.2
 spec:
   group: icp4a.ibm.com
   names:
@@ -79,6 +79,8 @@ spec:
                 type: boolean
               olm_production_workflow:
                 type: boolean
+              olm_production_workflow_process_service:
+                type: boolean
               olm_production_workflow_deploy_type:
                 type: string
               olm_starter_option:
@@ -127,12 +129,16 @@ spec:
                         type: boolean
                       workstreams:
                         type: boolean
+                      pfs:
+                        type: boolean
+                      bai:
+                        type: boolean
+                      baml:
+                        type: boolean
                   application:
                     type: object
                     properties:
                       ban: 
-                        type: boolean
-                      business_orchestration:
                         type: boolean
               olm_production_option:
                 type: object
@@ -191,8 +197,11 @@ spec:
                     properties:
                       bai:
                         type: boolean
-                      ae_data_persistence:
-                        type: boolean
+                  wfps_authoring:
+                    type: object
+                    properties:
+                      bai:
+                        type: boolean                  
                   adp:
                     type: object
                     properties:
@@ -230,10 +239,10 @@ spec:
                     nullable: true
                   root_ca_secret:
                     type: string
-                    nullable: true 
+                    nullable: true
                   sc_drivers_url:
                     type: string
-                    nullable: true
+                    nullable: true 
                   sc_ingress_enable:
                     type: boolean
                   sc_ingress_tls_secret_name: 
@@ -664,6 +673,8 @@ spec:
                               type: object
                               x-kubernetes-preserve-unknown-fields: true
                               properties:
+                                name:
+                                  type: string
                                 dc_os_datasource_name:
                                   type: string
                                 dc_os_xa_datasource_name:
@@ -932,50 +943,6 @@ spec:
                 type: object
                 x-kubernetes-preserve-unknown-fields: true
                 properties:
-                  admin_user: 
-                    type: string
-                    nullable: true
-                  database:
-                    type: object
-                    x-kubernetes-preserve-unknown-fields: true
-                    properties:                 
-                      enable_ssl: 
-                        type: boolean       
-                      db_cert_secret_name: 
-                        type: string
-                        nullable: true
-                      type: 
-                        type: string
-                      server_name: 
-                        type: string
-                      database_name: 
-                        type: string
-                      port: 
-                        type: string
-                      secret_name: 
-                        type: string
-                        nullable: true
-                      jdbc_url: 
-                        type: string
-                        nullable: true
-                      use_custom_jdbc_drivers: 
-                        type: boolean
-                      custom_jdbc_pvc: 
-                        type: string
-                        nullable: true
-                      jdbc_driver_files: 
-                        type: string
-                        nullable: true
-                      hadr:
-                        type: object
-                        x-kubernetes-preserve-unknown-fields: true
-                        properties:
-                          standbydb_host:
-                            type: string
-                            nullable: true
-                          standbydb_port:
-                            type: string
-                            nullable: true
                   content_integration:
                     type: object
                     x-kubernetes-preserve-unknown-fields: true
