@@ -66,7 +66,7 @@ spec:
     image:
       ## The default repository is the IBM Entitled Registry
       repository: cp.icr.io/cp/cp4a/iccsap/iccsap
-      tag: ga-4004-iccsap-if011
+      tag: ga-4004-iccsap-if012
 
       ## This will override the image pull policy in the shared_configuration.
       pull_policy: IfNotPresent
@@ -113,7 +113,41 @@ spec:
     storage:
       storage_class: "<Required>"
       size_for_logstore: 1Gi  
-
+    ## This can be overwritten by componenent level definition for example ecm_configuration.cpe.node_affinity.
+    node_affinity:
+      # Value in this field will be used as kubernetes.io/arch selector values. By default all support arch will be included
+      # It will be transformed to node selector value
+      # - key: kubernetes.io/arch
+      #   operator: In
+      #   values:
+      #     - amd64
+      #     - s390x
+      #     - ppc64le
+      deploy_arch:
+      - amd64
+      - s390x
+      #-------------------------------------
+      # custom_node_selector_match_expression will be added in node selector match expressions.
+      # It accept array list inputs. You can assign mutiple selector match expressions except (kubernetes.io/arch)
+      # Example value:
+      # - key: kubernetes.io/hostname
+      #   operator: In
+      #   values:
+      #     - worker0
+      #     - worker1
+      #     - worker3
+      #-------------------------------------
+      custom_node_selector_match_expression: []
+    ## Values in this field will be used as annotations in all generated pods and it must be valid annotation key value pairs.
+    # Example:
+    # customAnnotationKey: customAnnotationValue
+    ## This can be overwritten by componenent level definition for example ecm_configuration.cpe.custom_annotations.
+    custom_annotations: {}
+    ## Values in this field will be used as labels in all generated pods and it must be valid label key value pairs
+    # Example:
+    # customLabelKey: customLableValue
+    ## This can be overwritten by componenent level definition for example ecm_configuration.cpe.custom_labels.
+    custom_labels: {}
     ## Default values for both rediness and liveness probes.  Modify these values to meet your requirements.
     probe:
       readiness:
